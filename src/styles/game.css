@@ -1,0 +1,819 @@
+
+/* PÁGINA PRINCIPAL */
+
+.game-page {
+    min-height: 100vh;
+    padding: 30px 20px 50px;
+    background:
+      radial-gradient(
+        ellipse at top,
+        #244a9b 0%,
+        #101d4b 45%,
+        #080e26 90%
+      );
+  }
+  
+  /* ENCABEZADO */
+  
+  .game-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .game-subtitle {
+    font-size: 13px;
+    letter-spacing: 5px;
+    font-weight: bold;
+    color: #f7d377;
+  }
+  
+  .game-header h1 {
+    font-size: clamp(30px, 5vw, 58px);
+    color: #ffffff;
+    margin: 12px 0 20px;
+    text-shadow: 0 5px 18px #00000080;
+  }
+  
+  .game-header h1 span {
+    color: #ffcc55;
+  }
+  
+  .round-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffe18b, #d59b26);
+    color: #172248;
+    padding: 10px 30px;
+    border-radius: 30px;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+  
+  /* MARCADOR DE EQUIPOS */
+  
+  .scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto 35px;
+  }
+  
+  .team-card {
+    flex: 1;
+    max-width: 330px;
+    min-width: 0;
+    background: #17295a;
+    border: 3px solid #4568a5;
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+  
+  .team-0 {
+    border-color: #d8424b;
+  }
+  
+  .team-1 {
+    border-color: #459afa;
+  }
+  
+  .team-card.active {
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px #ffcc5580;
+  }
+  
+  .team-card h2 {
+    font-size: 21px;
+    margin: 0 0 12px;
+  }
+  
+  .team-points {
+    font-size: 55px;
+    font-weight: 900;
+    color: #ffda75;
+  }
+  
+  .team-strikes {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 10px 0;
+  }
+  
+  .team-strikes span {
+    font-size: 27px;
+    font-weight: bold;
+    color: #46557b;
+  }
+  
+  .team-strikes .strike-active {
+    color: #ff414b;
+    text-shadow: 0 0 12px #fa2d3b;
+  }
+  
+  .team-card p {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #b5c7e8;
+    margin-bottom: 0;
+  }
+  
+  /* TABLERO PRINCIPAL */
+  
+  .game-board {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    background: linear-gradient(
+      145deg,
+      #193878,
+      #0e2050
+    );
+    border: 7px solid #efbe53;
+    border-radius: 25px;
+    box-shadow:
+      0 0 35px #dba83a60,
+      inset 0 0 25px #00000060;
+  }
+  
+  .question-box {
+    text-align: center;
+    padding: 10px 10px 25px;
+  }
+  
+  .question-box span {
+    font-size: 13px;
+    font-weight: bold;
+    color: #ffda75;
+    letter-spacing: 3px;
+  }
+  
+  .question-box h2 {
+    font-size: clamp(22px, 3vw, 31px);
+    line-height: 1.4;
+    margin: 15px 0 0;
+  }
+  
+  /* RESPUESTAS */
+  
+  .answers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .answer-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-height: 70px;
+    padding: 10px 16px;
+    border: 2px solid #7193df;
+    border-radius: 12px;
+    background: linear-gradient(
+      90deg,
+      #2955ad,
+      #193878
+    );
+    color: #ffffff;
+    transition: all 0.25s ease;
+  }
+  
+  .answer-card:hover:not(:disabled) {
+    background: #376bd0;
+    transform: scale(1.015);
+  }
+  
+  .answer-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #ffcf5b;
+    color: #172957;
+    font-weight: 900;
+    font-size: 20px;
+  }
+  
+  .answer-text {
+    flex: 1;
+    min-width: 0;
+    font-size: clamp(16px, 2.5vw, 23px);
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .answer-points {
+    min-width: 60px;
+    padding: 10px;
+    background: #0b2055;
+    border-radius: 8px;
+    font-size: 22px;
+    font-weight: 900;
+    text-align: center;
+  }
+  
+  /* RESPUESTA DESCUBIERTA */
+  
+  .answer-card.revealed {
+    background: linear-gradient(
+      90deg,
+      #d7a13c,
+      #ffdf89
+    );
+    border-color: #ffffff;
+    color: #172855;
+    animation: reveal 0.45s ease-out;
+  }
+  
+  .answer-card.revealed .answer-points {
+    background: #fff3c7;
+  }
+  
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: rotateX(85deg);
+    }
+  
+    to {
+      opacity: 1;
+      transform: rotateX(0deg);
+    }
+  }
+  
+  /* PANEL DEL PRESENTADOR */
+  
+  .control-panel {
+    max-width: 900px;
+    margin: 30px auto 0;
+    padding: 25px;
+    background: #142550;
+    border: 1px solid #486398;
+    border-radius: 18px;
+    text-align: center;
+  }
+  
+  .control-panel h3 {
+    margin: 0 0 22px;
+    color: #ffdb79;
+    letter-spacing: 2px;
+  }
+  
+  .control-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .control-buttons button {
+    padding: 15px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 900;
+    color: white;
+    transition: transform 0.2s;
+  }
+  
+  .control-buttons button:hover:not(:disabled) {
+    transform: translateY(-3px);
+  }
+  
+  .btn-strike {
+    background: #d93445;
+  }
+  
+  .btn-next {
+    background: #19865c;
+  }
+  
+  .btn-reset {
+    background: #576481;
+  }
+  
+  .control-buttons button:disabled {
+    opacity: 0.4;
+  }
+  
+  .control-panel p {
+    color: #b8c5e3;
+    font-size: 13px;
+    margin-bottom: 0;
+  }
+  
+  /* PANTALLA DE STRIKE */
+  
+  .strike-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: #050817f2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .strike-symbol {
+    color: #ff233b;
+    font-size: min(60vw, 330px);
+    line-height: 1;
+    text-shadow: 0 0 60px #f60027;
+    animation: strikeImpact 0.35s ease-out;
+  }
+  
+  .strike-overlay h2 {
+    font-size: clamp(22px, 4vw, 40px);
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .strike-overlay p {
+    color: #c3cee7;
+  }
+  
+  @keyframes strikeImpact {
+    from {
+      transform: scale(2);
+      opacity: 0;
+    }
+  
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* RESPONSIVE */
+  
+  @media (max-width: 600px) {
+    .game-page {
+      padding: 20px 12px;
+    }
+  
+    .scoreboard {
+      gap: 10px;
+    }
+  
+    .team-card {
+      padding: 12px 8px;
+    }
+  
+    .team-card h2 {
+      font-size: 16px;
+    }
+  
+    .team-points {
+      font-size: 38px;
+    }
+  
+    .team-strikes {
+      gap: 7px;
+    }
+  
+    .team-strikes span {
+      font-size: 22px;
+    }
+  
+    .game-board {
+      padding: 15px 10px;
+      border-width: 4px;
+    }
+  
+    .answer-card {
+      min-height: 60px;
+      padding: 8px;
+      gap: 8px;
+    }
+  
+    .answer-number {
+      width: 34px;
+      height: 34px;
+      font-size: 16px;
+    }
+  
+    .answer-points {
+      min-width: 42px;
+      font-size: 17px;
+      padding: 8px 4px;
+    }
+  
+    .control-panel {
+      padding: 20px 10px;
+    }
+  }
+
+
+
+
+/* FORMULARIO DE RESPUESTAS */
+
+.answer-form {
+    max-width: 650px;
+    margin: 0 auto 25px;
+  }
+  
+  .answer-form label {
+    display: block;
+    margin-bottom: 12px;
+    color: #ffdb79;
+    font-weight: bold;
+  }
+  
+  .answer-input-group {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .answer-input-group input {
+    flex: 1;
+    min-width: 0;
+    padding: 15px;
+    border: 2px solid #7193df;
+    border-radius: 10px;
+    background: #0b1940;
+    color: white;
+    font-size: 18px;
+    outline: none;
+  }
+  
+  .answer-input-group input:focus {
+    border-color: #ffcc55;
+  }
+  
+  .answer-input-group input::placeholder {
+    color: #8c9dbd;
+  }
+  
+  .btn-check {
+    background: #e2ab35;
+    color: #142247;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 22px;
+    font-weight: 900;
+  }
+  
+  .btn-check:hover {
+    background: #ffcf60;
+  }
+  
+  .game-message {
+    max-width: 650px;
+    margin: 20px auto;
+    padding: 16px;
+    text-align: center;
+    background: #172d64;
+    border: 1px solid #f3c75c;
+    border-radius: 12px;
+    color: #ffdc7d;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  @media (max-width: 600px) {
+    .answer-input-group {
+      flex-direction: column;
+    }
+  }
+  
+  
+
+/* DISEÑO COMPACTO: UNA SOLA PANTALLA */
+
+.game-page {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px;
+    gap: 10px;
+  }
+  
+  /* Encabezado más pequeño */
+  
+  .game-header {
+    flex-shrink: 0;
+    margin: 0;
+  }
+  
+  .game-subtitle {
+    font-size: 10px;
+    margin: 0;
+    letter-spacing: 3px;
+  }
+  
+  .game-header h1 {
+    font-size: clamp(22px, 3vw, 38px);
+    margin: 5px 0;
+  }
+  
+  .round-badge {
+    padding: 5px 18px;
+    font-size: 12px;
+  }
+  
+  /* Marcadores compactos */
+  
+  .scoreboard {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 850px;
+    gap: 15px;
+    margin: 0 auto;
+  }
+  
+  .team-card {
+    min-height: 0;
+    padding: 8px 12px;
+    border-radius: 12px;
+  }
+  
+  .team-card h2 {
+    font-size: 15px;
+    margin: 0 0 3px;
+  }
+  
+  .team-points {
+    font-size: clamp(26px, 4vh, 40px);
+  }
+  
+  .team-strikes {
+    gap: 8px;
+    margin: 2px 0;
+  }
+  
+  .team-strikes span {
+    font-size: 20px;
+  }
+  
+  .team-card p {
+    font-size: 9px;
+    margin: 2px 0 0;
+  }
+  
+  /* Tablero que ocupa el espacio restante */
+  
+  .game-board {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 12px 18px;
+    border-width: 5px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .question-box {
+    flex-shrink: 0;
+    padding: 0 5px 8px;
+  }
+  
+  .question-box span {
+    font-size: 10px;
+  }
+  
+  .question-box h2 {
+    font-size: clamp(16px, 2.5vh, 25px);
+    margin: 5px 0 0;
+    line-height: 1.2;
+  }
+  
+  /* Cinco respuestas distribuidas verticalmente */
+  
+  .answers-list {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    gap: 7px;
+  }
+  
+  .answer-card {
+    min-height: 0;
+    height: 100%;
+    padding: 4px 12px;
+    gap: 12px;
+    border-radius: 9px;
+  }
+  
+  .answer-number {
+    width: clamp(25px, 4vh, 36px);
+    height: clamp(25px, 4vh, 36px);
+    font-size: 15px;
+  }
+  
+  .answer-text {
+    font-size: clamp(13px, 2vh, 20px);
+    overflow-wrap: anywhere;
+  }
+  
+  .answer-points {
+    min-width: 45px;
+    padding: 6px;
+    font-size: 17px;
+  }
+  
+  /* Controles compactos */
+  
+  .control-panel {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 10px 15px;
+    border-radius: 12px;
+  }
+  
+  .control-panel h3 {
+    font-size: 12px;
+    margin: 0 0 8px;
+  }
+  
+  .control-buttons {
+    gap: 10px;
+  }
+  
+  .control-buttons button {
+    padding: 9px 15px;
+    font-size: 12px;
+  }
+  
+  .control-panel p {
+    display: none;
+  }
+  
+  /* Ajustes para pantallas pequeñas */
+  
+  @media (max-width: 600px) {
+    .game-page {
+      padding: 6px;
+      gap: 6px;
+    }
+  
+    .game-header h1 {
+      font-size: 21px;
+    }
+  
+    .team-card {
+      padding: 6px;
+    }
+  
+    .team-card h2 {
+      font-size: 12px;
+    }
+  
+    .team-points {
+      font-size: 26px;
+    }
+  
+    .team-strikes span {
+      font-size: 16px;
+    }
+  
+    .game-board {
+      padding: 8px;
+      border-width: 3px;
+    }
+  
+    .answer-card {
+      padding: 4px;
+      gap: 6px;
+    }
+  
+    .answer-text {
+      font-size: 13px;
+    }
+  
+    .answer-points {
+      min-width: 32px;
+      font-size: 14px;
+    }
+  
+    .control-panel {
+      padding: 8px;
+    }
+  }
+  
+
+
+/* EQUIPO SELECCIONADO */
+
+.team-card {
+    cursor: pointer;
+    position: relative;
+    transition: all 0.25s ease;
+  }
+  
+  .team-card.active {
+    transform: translateY(-3px);
+    background: #243d78;
+    border-color: #ffdf75;
+    box-shadow:
+      0 0 0 2px #ffdf75,
+      0 0 25px #ffcc5570;
+  }
+  
+  .team-card:not(.active) {
+    opacity: 0.75;
+  }
+  
+  .team-card:hover {
+    opacity: 1;
+  }
+  
+  /* NOMBRE DEL EQUIPO */
+  
+  .team-name-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+  }
+  
+  .team-name-container h2 {
+    margin: 0;
+    font-size: 17px;
+  }
+  
+  .edit-team-btn {
+    background: transparent;
+    border: none;
+    color: #ffdc75;
+    font-size: 21px;
+    padding: 2px 5px;
+    cursor: pointer;
+  }
+  
+  .edit-team-btn:hover {
+    color: white;
+    transform: scale(1.15);
+  }
+  
+  /* CAMPO PARA EDITAR */
+  
+  .team-name-container form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+  }
+  
+  .team-name-input {
+    width: 70%;
+    min-width: 0;
+    padding: 6px;
+    background: #0a1940;
+    border: 1px solid #ffdc75;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .save-name-btn,
+  .cancel-name-btn {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 8px;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .save-name-btn {
+    background: #19865c;
+  }
+  
+  .cancel-name-btn {
+    background: #c83d48;
+  }
+  
+  /* INDICADOR DEL TURNO */
+  
+  .team-status {
+    margin-top: 5px;
+    color: #aebfe0;
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-weight: bold;
+  }
+  
+  .team-card.active .team-status {
+    color: #ffdf75;
+  }
+  
