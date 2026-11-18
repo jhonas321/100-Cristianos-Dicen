@@ -5,34 +5,22 @@ import Header from "../components/Header";
 import ScoreBoard from "../components/ScoreBoard";
 import GameBoard from "../components/GameBoard";
 import ControlPanel from "../components/ControlPanel";
+import WinnerScreen from "../components/WinnerScreen";
 
 import { questions } from "../data/preguntas";
 import "../styles/game.css";
 
-// EQUIPOS INICIALES
 const initialTeams = [
   { name: "Equipo Rojo", score: 0, strikes: 0 },
   { name: "Equipo Azul", score: 0, strikes: 0 },
 ];
 
-// NORMALIZAR TEXTO PARA COMPARAR RESPUESTAS
-function normalizeText(text) {
-  return text
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ");
-}
-
 function GamePage() {
-  // ESTADOS DEL JUEGO
   const [round, setRound] = useState(0);
   const [teams, setTeams] = useState(initialTeams);
   const [activeTeam, setActiveTeam] = useState(0);
   const [revealedAnswers, setRevealedAnswers] = useState([]);
-  const [showStrike, setShowStrike] = useState(false);
-  const [message, setMessage] = useState("");
+  const [isFinished, setIsFinished] = useState(false);
 
   const currentQuestion = questions[round];
   const isLastRound = round === questions.length - 1;
@@ -42,7 +30,7 @@ function GamePage() {
     setActiveTeam(index);
   }
 
-  // CAMBIAR EL NOMBRE DE UN EQUIPO
+  // CAMBIAR NOMBRE DEL EQUIPO
   function renameTeam(index, newName) {
     const name = newName.trim();
 
@@ -50,94 +38,25 @@ function GamePage() {
 
     setTeams((previous) =>
       previous.map((team, i) =>
-        i === index
-          ? { ...team, name }
-          : team
+        i === index ? { ...team, name } : team
       )
     );
   }
 
-  // REVELAR UNA RESPUESTA Y SUMAR PUNTOS
+  // REVELAR RESPUESTA Y SUMAR PUNTOS
   function revealAnswer(index) {
-    if (revealedAnswers.includes(index)) {
-      return false;
-    }
+    if (revealedAnswers.includes(index)) return;
 
     const answer = currentQuestion.answers[index];
 
-    setRevealedAnswers((previous) => [
-      ...previous,
-      index,
-    ]);
+    setRevealedAnswers((previous) => [...previous, index]);
 
     setTeams((previous) =>
       previous.map((team, i) =>
         i === activeTeam
-          ? {
-              ...team,
-              score: team.score + answer.points,
-            }
+          ? { ...team, score: team.score + answer.points }
           : team
       )
-    );
-
-    return true;
-  }
-
-  // REGISTRAR STRIKE AUTOMÁTICO
-  function addStrike() {
-    setTeams((previous) =>
-      previous.map((team, i) =>
-        i === activeTeam
-          ? {
-              ...team,
-              strikes: Math.min(team.strikes + 1, 3),
-            }
-          : team
-      )
-    );
-
-    setMessage("¡RESPUESTA INCORRECTA!");
-    setShowStrike(true);
-  }
-
-  // COMPROBAR LA RESPUESTA ESCRITA
-  function checkAnswer(input) {
-    const userAnswer = normalizeText(input);
-
-    if (!userAnswer || showStrike) return;
-
-    const index = currentQuestion.answers.findIndex(
-      (answer) => {
-        const acceptedAnswers = [
-          answer.text,
-          ...(answer.aliases || []),
-        ];
-
-        return acceptedAnswers.some(
-          (text) =>
-            normalizeText(text) === userAnswer
-        );
-      }
-    );
-
-    // RESPUESTA INCORRECTA
-    if (index === -1) {
-      addStrike();
-      return;
-    }
-
-    // RESPUESTA YA DESCUBIERTA
-    if (revealedAnswers.includes(index)) {
-      setMessage("Esa respuesta ya fue descubierta.");
-      return;
-    }
-
-    // RESPUESTA CORRECTA
-    revealAnswer(index);
-
-    setMessage(
-      `¡Correcto! ${currentQuestion.answers[index].text}`
     );
   }
 
@@ -146,12 +65,8 @@ function GamePage() {
     if (isLastRound) return;
 
     setRound((previous) => previous + 1);
-
     setRevealedAnswers([]);
-    setShowStrike(false);
-    setMessage("");
 
-    // REINICIAR STRIKES, CONSERVAR PUNTOS Y NOMBRES
     setTeams((previous) =>
       previous.map((team) => ({
         ...team,
@@ -169,17 +84,48 @@ function GamePage() {
     if (!confirmed) return;
 
     setRound(0);
+    setTeams(initialTeams.map((team) => ({ ...team })));
+    setActiveTeam(0);
+    setRevealedAnswers([]);
+    setIsFinished(false);
+  }
 
-    setTeams(
-      initialTeams.map((team) => ({
+  // FINALIZAR CONCURSO
+  function finishGame() {
+    const confirmed = window.confirm(
+      "¿Finalizar el concurso y mostrar los resultados?"
+    );
+
+    if (!confirmed) return;
+
+    setIsFinished(true);
+  }
+
+  // JUGAR NUEVAMENTE
+  function playAgain() {
+    setRound(0);
+
+    setTeams((previous) =>
+      previous.map((team) => ({
         ...team,
+        score: 0,
+        strikes: 0,
       }))
     );
 
     setActiveTeam(0);
     setRevealedAnswers([]);
-    setShowStrike(false);
-    setMessage("");
+    setIsFinished(false);
+  }
+
+  // MOSTRAR RESULTADOS FINALES
+  if (isFinished) {
+    return (
+      <WinnerScreen
+        teams={teams}
+        onRestart={playAgain}
+      />
+    );
   }
 
   return (
@@ -187,7 +133,7 @@ function GamePage() {
       {/* ENCABEZADO */}
       <Header round={round + 1} />
 
-      {/* MARCADOR DE EQUIPOS */}
+      {/* MARCADORES Y SELECCIÓN DE EQUIPOS */}
       <ScoreBoard
         teams={teams}
         activeTeam={activeTeam}
@@ -204,34 +150,11 @@ function GamePage() {
 
       {/* PANEL DEL PRESENTADOR */}
       <ControlPanel
-        onCheckAnswer={checkAnswer}
         onNextRound={nextRound}
         onReset={resetGame}
+        onFinish={finishGame}
         isLastRound={isLastRound}
       />
-
-      {/* MENSAJES DEL JUEGO */}
-      {message && !showStrike && (
-        <div className="game-message">
-          {message}
-        </div>
-      )}
-
-      {/* ANIMACIÓN DE STRIKE */}
-      {showStrike && (
-        <div
-          className="strike-overlay"
-          onClick={() => setShowStrike(false)}
-        >
-          <span className="strike-symbol">
-            ✕
-          </span>
-
-          <h2>¡RESPUESTA INCORRECTA!</h2>
-
-          <p>Haz clic para continuar</p>
-        </div>
-      )}
     </div>
   );
 }
