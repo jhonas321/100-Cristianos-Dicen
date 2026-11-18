@@ -812,3 +812,179 @@
     font-size: 30px;
   }
 }
+
+
+.btn-strike {
+  background: #bf3446;
+}
+
+.btn-strike:hover:not(:disabled) {
+  background: #db4356;
+}
+
+
+
+
+/* ========================================
+   ANIMACIÓN DE STRIKE - X GRANDE
+======================================== */
+
+.game-page {
+  position: relative;
+}
+
+.strike-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: rgba(30, 0, 0, 0.35);
+  animation: strike-overlay-animation 0.85s ease-out forwards;
+}
+
+.strike-big-x {
+  color: #ff253a;
+  font-size: clamp(150px, 28vw, 330px);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow:
+    0 0 20px #ff0000,
+    0 0 55px #ff0000,
+    0 0 100px #ff253a;
+  animation: strike-x-animation 0.85s ease-out forwards;
+}
+
+@keyframes strike-x-animation {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-25deg);
+  }
+
+  30% {
+    opacity: 1;
+    transform: scale(1.25) rotate(5deg);
+  }
+
+  50% {
+    transform: scale(1) rotate(0);
+  }
+
+  75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes strike-overlay-animation {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+
+
+
+/* ANIMACIÓN STRIKE: 1, 2 O 3 X */
+
+.game-page {
+  position: relative;
+}
+
+.strike-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 2vw, 30px);
+  pointer-events: none;
+  background: rgba(30, 0, 0, 0.35);
+  animation: strike-overlay-animation 3s ease-out forwards;
+}
+
+.strike-big-x {
+  display: inline-block;
+  flex-shrink: 0;
+  color: #ff253a;
+  font-size: clamp(80px, 12vw, 170px);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow:
+    0 0 20px #ff0000,
+    0 0 55px #ff0000,
+    0 0 100px #ff253a;
+  animation: strike-x-animation 3s ease-out forwards;
+}
+
+.strike-count-1 .strike-big-x {
+  font-size: clamp(150px, 24vw, 310px);
+}
+
+.strike-count-2 .strike-big-x {
+  font-size: clamp(110px, 17vw, 230px);
+}
+
+@keyframes strike-x-animation {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-25deg);
+  }
+
+  15% {
+    opacity: 1;
+    transform: scale(1.18) rotate(5deg);
+  }
+
+  25% {
+    transform: scale(1) rotate(0);
+  }
+
+  85% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes strike-overlay-animation {
+  0% {
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

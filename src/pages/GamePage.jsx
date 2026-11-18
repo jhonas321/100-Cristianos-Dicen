@@ -21,16 +21,17 @@ function GamePage() {
   const [activeTeam, setActiveTeam] = useState(0);
   const [revealedAnswers, setRevealedAnswers] = useState([]);
   const [isFinished, setIsFinished] = useState(false);
+  const [strikeAnimation, setStrikeAnimation] = useState(null);
 
   const currentQuestion = questions[round];
   const isLastRound = round === questions.length - 1;
 
-  // SELECCIONAR EQUIPO MANUALMENTE
+  // SELECCIONAR EQUIPO
   function selectTeam(index) {
     setActiveTeam(index);
   }
 
-  // CAMBIAR NOMBRE DEL EQUIPO
+  // CAMBIAR NOMBRE
   function renameTeam(index, newName) {
     const name = newName.trim();
 
@@ -60,12 +61,35 @@ function GamePage() {
     );
   }
 
-  // PASAR A LA SIGUIENTE RONDA
+  // STRIKE: MOSTRAR 1, 2 O 3 X
+  function addStrike() {
+    const currentStrikes = teams[activeTeam].strikes;
+
+    if (currentStrikes >= 3) return;
+
+    const nextStrikes = currentStrikes + 1;
+
+    setTeams((previous) =>
+      previous.map((team, i) =>
+        i === activeTeam
+          ? { ...team, strikes: Math.min(team.strikes + 1, 3) }
+          : team
+      )
+    );
+
+    setStrikeAnimation((previous) => ({
+      id: (previous?.id ?? 0) + 1,
+      count: nextStrikes,
+    }));
+  }
+
+  // SIGUIENTE RONDA
   function nextRound() {
     if (isLastRound) return;
 
     setRound((previous) => previous + 1);
     setRevealedAnswers([]);
+    setStrikeAnimation(null);
 
     setTeams((previous) =>
       previous.map((team) => ({
@@ -75,7 +99,7 @@ function GamePage() {
     );
   }
 
-  // REINICIAR TODO EL CONCURSO
+  // REINICIAR CONCURSO
   function resetGame() {
     const confirmed = window.confirm(
       "¿Estás seguro de reiniciar todo el concurso?"
@@ -87,10 +111,11 @@ function GamePage() {
     setTeams(initialTeams.map((team) => ({ ...team })));
     setActiveTeam(0);
     setRevealedAnswers([]);
+    setStrikeAnimation(null);
     setIsFinished(false);
   }
 
-  // FINALIZAR CONCURSO
+  // FINALIZAR
   function finishGame() {
     const confirmed = window.confirm(
       "¿Finalizar el concurso y mostrar los resultados?"
@@ -98,6 +123,7 @@ function GamePage() {
 
     if (!confirmed) return;
 
+    setStrikeAnimation(null);
     setIsFinished(true);
   }
 
@@ -115,10 +141,10 @@ function GamePage() {
 
     setActiveTeam(0);
     setRevealedAnswers([]);
+    setStrikeAnimation(null);
     setIsFinished(false);
   }
 
-  // MOSTRAR RESULTADOS FINALES
   if (isFinished) {
     return (
       <WinnerScreen
@@ -130,10 +156,8 @@ function GamePage() {
 
   return (
     <div className="game-page">
-      {/* ENCABEZADO */}
       <Header round={round + 1} />
 
-      {/* MARCADORES Y SELECCIÓN DE EQUIPOS */}
       <ScoreBoard
         teams={teams}
         activeTeam={activeTeam}
@@ -141,20 +165,46 @@ function GamePage() {
         onRenameTeam={renameTeam}
       />
 
-      {/* TABLERO DE RESPUESTAS */}
       <GameBoard
         question={currentQuestion}
         revealedAnswers={revealedAnswers}
         onReveal={revealAnswer}
       />
 
-      {/* PANEL DEL PRESENTADOR */}
       <ControlPanel
+        onStrike={addStrike}
         onNextRound={nextRound}
         onReset={resetGame}
         onFinish={finishGame}
         isLastRound={isLastRound}
+        isStrikeDisabled={teams[activeTeam].strikes >= 3}
       />
+
+      {strikeAnimation && (
+        <div
+          key={strikeAnimation.id}
+          className={`strike-overlay strike-count-${strikeAnimation.count}`}
+          aria-hidden="true"
+          onAnimationEnd={(event) => {
+            if (event.target !== event.currentTarget) return;
+
+            const animationId = strikeAnimation.id;
+
+            setStrikeAnimation((previous) =>
+              previous?.id === animationId ? null : previous
+            );
+          }}
+        >
+          {Array.from(
+            { length: strikeAnimation.count },
+            (_, index) => (
+              <span key={index} className="strike-big-x">
+                ✕
+              </span>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }
