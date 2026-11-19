@@ -30,7 +30,7 @@ function GamePage() {
   // CARGAR AUDIOS UNA SOLA VEZ
   useEffect(() => {
     strikeAudio.current = new Audio("/sounds/strike.mp3");
-    correctAudio.current = new Audio("/sounds/acierto.mp3");
+    correctAudio.current = new Audio("/sounds/acierto1.mp3");
 
     strikeAudio.current.preload = "auto";
     correctAudio.current.preload = "auto";
