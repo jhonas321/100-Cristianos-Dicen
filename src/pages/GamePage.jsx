@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import Header from "../components/Header";
 import ScoreBoard from "../components/ScoreBoard";
@@ -23,6 +23,55 @@ function GamePage() {
   const [isFinished, setIsFinished] = useState(false);
   const [strikeAnimation, setStrikeAnimation] = useState(null);
 
+  // AUDIOS DEL CONCURSO
+  const strikeAudio = useRef(null);
+  const correctAudio = useRef(null);
+
+  // CARGAR AUDIOS UNA SOLA VEZ
+  useEffect(() => {
+    strikeAudio.current = new Audio("/sounds/strike.mp3");
+    correctAudio.current = new Audio("/sounds/acierto.mp3");
+
+    strikeAudio.current.preload = "auto";
+    correctAudio.current.preload = "auto";
+
+    strikeAudio.current.load();
+    correctAudio.current.load();
+
+    return () => {
+      [strikeAudio.current, correctAudio.current].forEach(
+        (audio) => {
+          if (audio) {
+            audio.pause();
+            audio.removeAttribute("src");
+            audio.load();
+          }
+        }
+      );
+
+      strikeAudio.current = null;
+      correctAudio.current = null;
+    };
+  }, []);
+
+  // REPRODUCIR SONIDO SIN RETRASO
+  function playSound(type) {
+    const audio =
+      type === "strike"
+        ? strikeAudio.current
+        : correctAudio.current;
+
+    if (!audio) return;
+
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = 1;
+
+    audio.play().catch((error) => {
+      console.error("Error al reproducir audio:", error);
+    });
+  }
+
   const currentQuestion = questions[round];
   const isLastRound = round === questions.length - 1;
 
@@ -31,7 +80,7 @@ function GamePage() {
     setActiveTeam(index);
   }
 
-  // CAMBIAR NOMBRE
+  // CAMBIAR NOMBRE DEL EQUIPO
   function renameTeam(index, newName) {
     const name = newName.trim();
 
@@ -44,24 +93,33 @@ function GamePage() {
     );
   }
 
-  // REVELAR RESPUESTA Y SUMAR PUNTOS
+  // REVELAR RESPUESTA Y REPRODUCIR ACIERTO
   function revealAnswer(index) {
     if (revealedAnswers.includes(index)) return;
 
     const answer = currentQuestion.answers[index];
 
-    setRevealedAnswers((previous) => [...previous, index]);
+    // SONIDO INMEDIATO AL HACER CLIC
+    playSound("correct");
+
+    setRevealedAnswers((previous) => [
+      ...previous,
+      index,
+    ]);
 
     setTeams((previous) =>
       previous.map((team, i) =>
         i === activeTeam
-          ? { ...team, score: team.score + answer.points }
+          ? {
+              ...team,
+              score: team.score + answer.points,
+            }
           : team
       )
     );
   }
 
-  // STRIKE: MOSTRAR 1, 2 O 3 X
+  // STRIKE: SONIDO Y 1, 2 O 3 X GIGANTES
   function addStrike() {
     const currentStrikes = teams[activeTeam].strikes;
 
@@ -69,10 +127,16 @@ function GamePage() {
 
     const nextStrikes = currentStrikes + 1;
 
+    // SONIDO INMEDIATO AL HACER CLIC
+    playSound("strike");
+
     setTeams((previous) =>
       previous.map((team, i) =>
         i === activeTeam
-          ? { ...team, strikes: Math.min(team.strikes + 1, 3) }
+          ? {
+              ...team,
+              strikes: Math.min(team.strikes + 1, 3),
+            }
           : team
       )
     );
@@ -115,7 +179,7 @@ function GamePage() {
     setIsFinished(false);
   }
 
-  // FINALIZAR
+  // FINALIZAR CONCURSO
   function finishGame() {
     const confirmed = window.confirm(
       "¿Finalizar el concurso y mostrar los resultados?"
@@ -145,6 +209,7 @@ function GamePage() {
     setIsFinished(false);
   }
 
+  // PANTALLA DEL GANADOR
   if (isFinished) {
     return (
       <WinnerScreen
@@ -177,28 +242,38 @@ function GamePage() {
         onReset={resetGame}
         onFinish={finishGame}
         isLastRound={isLastRound}
-        isStrikeDisabled={teams[activeTeam].strikes >= 3}
+        isStrikeDisabled={
+          teams[activeTeam].strikes >= 3
+        }
       />
 
+      {/* ANIMACIÓN DE 1, 2 O 3 X */}
       {strikeAnimation && (
         <div
           key={strikeAnimation.id}
           className={`strike-overlay strike-count-${strikeAnimation.count}`}
           aria-hidden="true"
           onAnimationEnd={(event) => {
-            if (event.target !== event.currentTarget) return;
+            if (
+              event.target !== event.currentTarget
+            ) return;
 
             const animationId = strikeAnimation.id;
 
             setStrikeAnimation((previous) =>
-              previous?.id === animationId ? null : previous
+              previous?.id === animationId
+                ? null
+                : previous
             );
           }}
         >
           {Array.from(
             { length: strikeAnimation.count },
             (_, index) => (
-              <span key={index} className="strike-big-x">
+              <span
+                key={index}
+                className="strike-big-x"
+              >
                 ✕
               </span>
             )
