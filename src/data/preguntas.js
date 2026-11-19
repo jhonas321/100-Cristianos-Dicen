@@ -40,9 +40,9 @@ export const questions = [
     question: "Menciona a una mujer valiente de la Biblia.",
     answers: [
       { text: "Ester", points: 40 },
-      { text: "Débora", points: 30 },
+      { text: "Ana", points: 30 },
       { text: "Rut", points: 20 },
-      { text: "María", points: 10 },
+      { text: "María Magdalena", points: 10 },
     ],
   },
   {
@@ -50,7 +50,7 @@ export const questions = [
     question: "Menciona un milagro que hizo Jesús.",
     answers: [
       { text: "Sanó enfermos", points: 40 },
-      { text: "Caminó sobre el agua", points: 30 },
+      { text: "Curó al ciego y al cojo", points: 30 },
       { text: "Multiplicó los panes", points: 20 },
       { text: "Resucitó a Lázaro", points: 10 },
     ],
@@ -66,9 +66,9 @@ export const questions = [
     question: "Menciona algo que hace un cristiano al despertar.",
     answers: [
       { text: "Ora", points: 40 },
-      { text: "Lee la Biblia", points: 30 },
+      { text: "Abre los ojos", points: 30 },
       { text: "Da gracias a Dios", points: 20 },
-      { text: "Se alista", points: 10 },
+      { text: "Usa el celular", points: 10 },
     ],
   },
   {
@@ -77,13 +77,13 @@ export const questions = [
     answers: [
       { text: "Oración", points: 40 },
       { text: "Alabanza", points: 30 },
-      { text: "Predicación", points: 20 },
-      { text: "Adoración", points: 10 },
+      { text: "Prédica", points: 20 },
+      { text: "Ofrendas", points: 10 },
     ],
   },
   {
     id: 8,
-    question: "¿Qué hacen los cristianos cuando están pasando por problemas?",
+    question: "¿Qué deberían hacer los cristianos cuando están pasando por problemas?",
     answers: [
       { text: "Orar", points: 40 },
       { text: "Leer la Biblia", points: 30 },
@@ -93,22 +93,22 @@ export const questions = [
   },
   {
     id: 9,
-    question: "¿Qué necesita un cristiano para crecer espiritualmente?",
+    question: "¿Cuáles son los frutos de un cristiano que ha recibido el Espíritu Santo?",
     answers: [
-      { text: "Oración", points: 40 },
-      { text: "Leer la Biblia", points: 30 },
-      { text: "Ayuno", points: 20 },
-      { text: "Congregarse", points: 10 },
+      { text: "Amor", points: 40 },
+      { text: "Mansedumbre", points: 30 },
+      { text: "Paciencia", points: 20 },
+      { text: "Templanza", points: 10 },
     ],
   },
   {
     id: 10,
-    question: "Menciona algo que debe tener una iglesia unida.",
+    question: "Menciona cualidades que deben verse en una iglesia donde habita Dios.",
     answers: [
       { text: "Amor", points: 40 },
       { text: "Unidad", points: 30 },
       { text: "Respeto", points: 20 },
-      { text: "Perdón", points: 10 },
+      { text: "Armonía", points: 10 },
     ],
   },
 
@@ -119,42 +119,42 @@ export const questions = [
 
   {
     id: 11,
-    question: "Menciona una excusa que da alguien para no ir a la iglesia.",
+    question: "Menciona algunas excusas que un joven da para no ir a la iglesia.",
     answers: [
       { text: "Estoy cansado", points: 40 },
-      { text: "Tengo mucho trabajo", points: 30 },
+      { text: "Tengo tarea o trabajo", points: 30 },
       { text: "Me quedé dormido", points: 20 },
       { text: "Estoy enfermo", points: 10 },
     ],
   },
   {
     id: 12,
-    question: "Menciona algo que suele llevar un cristiano a la iglesia.",
+    question: "Menciona algo que se lleva a la iglesia.",
     answers: [
       { text: "Biblia", points: 40 },
-      { text: "Cuaderno", points: 30 },
+      { text: "Agenda", points: 30 },
       { text: "Lapicero", points: 20 },
       { text: "Celular", points: 10 },
     ],
   },
   {
     id: 13,
-    question: "¿Qué dice un cristiano cuando el pastor pregunta: Cuántos dicen amén?",
+    question: "¿Qué hace un cristiano cuando no encuentra la cita bíblica?",
     answers: [
-      { text: "¡Amén!", points: 40 },
-      { text: "¡Gloria a Dios!", points: 30 },
-      { text: "¡Aleluya!", points: 20 },
-      { text: "¡Así es!", points: 10 },
+      { text: "Finge encontrarla y lee otro pasaje", points: 40 },
+      { text: "Busca en el índice", points: 30 },
+      { text: "Pregunta al hermano de al lado", points: 20 },
+      { text: "Busca hasta encontrarla", points: 10 },
     ],
   },
   {
     id: 14,
-    question: "¿Qué dice un hermano cuando le piden dirigir la oración sin avisarle?",
+    question: "¿Qué dice un joven cuando le piden dirigir la oración sin avisarle?",
     answers: [
       { text: "¡Amén!", points: 40 },
       { text: "¿Yo?", points: 30 },
-      { text: "Gloria a Dios", points: 20 },
-      { text: "Señor, ayúdame", points: 10 },
+      { text: "Hoy no, la próxima lo hago yo", points: 20 },
+      { text: "Que lo haga el hermano", points: 10 },
     ],
   },
   {
@@ -185,12 +185,12 @@ export const questions = [
   },
   {
     id: 17,
-    question: "¿Qué personaje bíblico fue un ejemplo para los jóvenes?",
+    question: "Menciona personajes que Dios usó para mostrar su poder.",
     answers: [
-      { text: "Timoteo", points: 40 },
-      { text: "José", points: 30 },
-      { text: "Daniel", points: 20 },
-      { text: "David", points: 10 },
+      { text: "Moisés liberó al pueblo de Israel", points: 40 },
+      { text: "David venció a Goliat", points: 30 },
+      { text: "Elías hizo descender fuego del cielo", points: 20 },
+      { text: "Sansón recibió una fuerza extraordinaria", points: 10 },
     ],
   },
   {
